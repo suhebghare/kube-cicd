@@ -96,7 +96,7 @@ pipeline{
             agent {label 'KOPS'}
 
             steps{
-                sh "helm upgrade install --force --namespace prod vprofile-stack helm/vprofilecharts --set appimage=${registry}:V${BUILD_NUMBER}"
+                sh "helm upgrade --install --force --namespace prod vprofile-stack helm/vprofilecharts --set appimage=${registry}:V${BUILD_NUMBER}"
             }
         }
    }
