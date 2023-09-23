@@ -1,0 +1,44 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: vpromq01
+  labels:
+    app: vpromq01
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vpromq01
+  template:
+    metadata:
+      labels:
+        app: vpromq01
+    spec:
+      containers:
+        - name: vpromq01
+          image: rabbitmq
+          ports:
+            - name: vpromq01-port
+              containerPort: 15672
+          env:
+            - name: RABBITMQ_DEFAULT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: rmq-pass
+            - name: RABBITMQ_DEFAULT_USER
+              value: "guest"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: vpromq01
+spec:
+  ports:
+    - port: 15672
+      targetPort: vpromq01-port
+      protocol: TCP
+  selector:
+    app: vpromq01
+  type: ClusterIP
